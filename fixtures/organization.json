@@ -1,0 +1,35 @@
+[
+{
+    "model": "organization.organization",
+    "pk": 1,
+    "fields": {
+        "slug": "boy-scouts-of-america",
+        "name": "Boy Scouts Of America",
+        "abbreviation": "bsa",
+        "description": "bsa",
+        "parent": null
+    }
+},
+{
+    "model": "organization.organization",
+    "pk": 2,
+    "fields": {
+        "slug": "pine-tree-council",
+        "name": "Pine Tree Council",
+        "abbreviation": "ptc",
+        "description": "pine tree council",
+        "parent": 1
+    }
+},
+{
+    "model": "organization.organization",
+    "pk": 3,
+    "fields": {
+        "slug": "casco-bay-district",
+        "name": "casco bay district",
+        "abbreviation": "cb",
+        "description": "casco bay",
+        "parent": 2
+    }
+}
+]

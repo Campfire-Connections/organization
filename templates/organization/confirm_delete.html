@@ -1,0 +1,14 @@
+<!-- organization/templates/organization/confirm_delete.html -->
+
+{% extends 'base/layout.html' %}
+
+{% block content %}
+    <h1>Delete Organization</h1>
+    <p>Are you sure you want to delete the organization "{{ organization.name }}"?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a href="{% url 'organization_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock content %}

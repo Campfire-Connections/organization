@@ -1,0 +1,13 @@
+<!-- organization/templates/organization/list.html -->
+{% extends 'base/layout.html' %}
+{% load render_table from django_tables2 %}
+
+{% block content %}
+    {% if parent_org %}
+    <h1>Sub-Organizations of {{ parent_org.name }}</h1>
+    {% else %}
+    <h1>Organizations</h1>
+    {% endif %}
+
+    {% render_table table %}
+{% endblock content %}
