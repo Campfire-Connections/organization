@@ -13,8 +13,8 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django_tables2 import SingleTableView
 
-from pages.mixins.forms import SuccessMessageMixin, FormValidMixin, ErrorMessageMixin
-from pages.mixins.models import SoftDeleteMixin
+from core.mixins.forms import SuccessMessageMixin, FormValidMixin, ErrorMessageMixin
+from core.mixins.models import SoftDeleteMixin
 
 from ..models.organization import Organization
 from ..forms.organization import OrganizationForm

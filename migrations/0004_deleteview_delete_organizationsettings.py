@@ -2,7 +2,7 @@
 
 import django.contrib.auth.mixins
 import django.views.generic.edit
-import pages.mixins.forms
+import core.mixins.forms
 from django.db import migrations, models
 
 
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 django.contrib.auth.mixins.LoginRequiredMixin,
                 django.contrib.auth.mixins.PermissionRequiredMixin,
                 models.Model,
-                pages.mixins.forms.SuccessMessageMixin,
+                core.mixins.forms.SuccessMessageMixin,
                 django.views.generic.edit.DeleteView,
             ),
         ),
