@@ -13,7 +13,11 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django_tables2 import SingleTableView
 
-from core.mixins.forms import SuccessMessageMixin, FormValidMixin, ErrorMessageMixin
+from core.mixins.forms import (
+    SuccessMessageMixin,
+    FormValidationMixin,
+    ErrorMessageMixin,
+)
 from core.mixins.models import SoftDeleteMixin
 
 from ..models.organization import Organization
@@ -92,7 +96,9 @@ class ListByParentView(LoginRequiredMixin, _ListView):
         return context
 
 
-class CreateView(LoginRequiredMixin, SuccessMessageMixin, FormValidMixin, _CreateView):
+class CreateView(
+    LoginRequiredMixin, SuccessMessageMixin, FormValidationMixin, _CreateView
+):
     model = Organization
     form_class = OrganizationForm
     template_name = "organization/form.html"
@@ -105,7 +111,7 @@ class CreateView(LoginRequiredMixin, SuccessMessageMixin, FormValidMixin, _Creat
 
 
 class SubOrganizationCreateView(
-    LoginRequiredMixin, SuccessMessageMixin, FormValidMixin, _CreateView
+    LoginRequiredMixin, SuccessMessageMixin, FormValidationMixin, _CreateView
 ):
     model = Organization
     form_class = OrganizationForm
@@ -143,7 +149,7 @@ class UpdateView(
     LoginRequiredMixin,
     PermissionRequiredMixin,
     SuccessMessageMixin,
-    FormValidMixin,
+    FormValidationMixin,
     _UpdateView,
 ):
     model = Organization
