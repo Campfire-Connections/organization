@@ -107,10 +107,12 @@ class OrganizationLabels(models.Model):
     )
     attendee_label = models.CharField(max_length=50, default="Attendee")
     facility_label = models.CharField(max_length=50, default="Facility")
+    department_label = models.CharField(max_length=50, default="Department")
     faction_label = models.CharField(max_length=50, default="Faction")
     sub_faction_label = models.CharField(max_length=50, default="Sub-Faction")
     faculty_label = models.CharField(max_length=50, default="Faculty")
     leader_label = models.CharField(max_length=50, default="Leader")
+    quarters_label = models.CharField(max_length=50, default="Quarters")
     faculty_quarters_label = models.CharField(max_length=50, default="Faculty Quarters")
     faction_quarters_label = models.CharField(max_length=50, default="Faction Quarters")
     leader_quarters_label = models.CharField(max_length=50, default="Leader Quarters")
@@ -142,16 +144,13 @@ class OrganizationLabels(models.Model):
         return f"Labels for {self.organization.name}"
 
     def update_labels(self, **kwargs):
-        """
-        Update the labels for the organization.
-
-        Args:
-            **kwargs: Key-value pairs of labels to update.
-        """
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
+            else:
+                raise ValidationError(f"{key} is not a valid label field.")
         self.save()
+
 
     def add_default_labels(self):
         """

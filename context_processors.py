@@ -1,21 +1,38 @@
 # organization/context_processors.py
 
+from django.core.cache import cache
+
 from .models.organization import OrganizationLabels
 
 
 def organization_labels(request):
     if not request.user.is_authenticated:
+        print("User not authenticated")
         return {}
 
-    organization_labels = None
+    cache_key = f"organization_labels_{request.user.id}"
+    labels = cache.get(cache_key)
 
-    # Check for user profiles and set organization_labels accordingly
-    if hasattr(request.user, "attendeeprofile"):
-        organization_labels = request.user.attendeeprofile.get_root_organization().labels
-    elif hasattr(request.user, "leaderprofile"):
-        organization_labels = request.user.leaderprofile.get_root_organization().labels
-    elif hasattr(request.user, "facultyprofile"):
-        organization_labels = request.user.facultyprofile.get_root_organization().labels
+    if labels is None:
+        labels = fetch_labels(request)
+        cache.set(cache_key, labels, timeout=3600)  # Cache for 1 hour
+
+    return {"organization_labels": labels}
+
+
+def fetch_labels(request):
+
+    user_profile = None
+    if hasattr(request.user, "attendeeprofile_profile"):
+        user_profile = request.user.attendeeprofile_profile
+    elif hasattr(request.user, "leaderprofile_profile"):
+        user_profile = request.user.leaderprofile_profile
+    elif hasattr(request.user, "facultyprofile_profile"):
+        user_profile = request.user.facultyprofile_profile
+
+    if not user_profile:
+        print("No profile found for user")
+        return {}
 
     # Default labels
     labels = {
@@ -39,10 +56,21 @@ def organization_labels(request):
         "period_label": "Period",
     }
 
-    # If organization_labels is set, update the labels dictionary
-    if organization_labels:
-        for label in labels:
-            labels[label] = getattr(organization_labels, label, labels[label])
+    # Fetch labels from root organization or use defaults
+    organization = user_profile.organization.get_root_organization()
+    if not organization:
+        return {labels}
 
-    # Return the labels as part of the context
-    return {"organization_labels": labels}
+    organization_labels = (
+        organization.labels if hasattr(organization, "labels") else None
+    )
+
+    if organization_labels:
+        labels.update(
+            {
+                key: getattr(organization_labels, key, default)
+                for key, default in labels.items()
+            }
+        )
+
+    return labels
