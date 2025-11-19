@@ -13,7 +13,9 @@ from core.mixins import settings as stgs
 from ..managers.organization import OrganizationManager, OrganizationLabelsManager
 
 
-class Organization(mixins.HierarchicalEntity, stgs.SettingsMixin, models.Model):
+class Organization(
+    mixins.HierarchicalEntity, mixins.AddressableMixin, stgs.SettingsMixin, models.Model
+):
     """Organization Model."""
 
     abbreviation = models.CharField(max_length=25, null=True, blank=True)
@@ -89,6 +91,13 @@ class Organization(mixins.HierarchicalEntity, stgs.SettingsMixin, models.Model):
             fallback_chain.append(current.parent)
             current = current.parent
         return fallback_chain
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["parent", "slug"], name="unique_org_slug_per_parent"
+            )
+        ]
 
 class OrganizationLabels(models.Model):
     organization = models.OneToOneField(
