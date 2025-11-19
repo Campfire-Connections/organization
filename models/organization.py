@@ -13,18 +13,7 @@ from core.mixins import settings as stgs
 from ..managers.organization import OrganizationManager, OrganizationLabelsManager
 
 
-class Organization(
-    mixins.NameDescriptionMixin,
-    mixins.TimestampMixin,
-    mixins.SoftDeleteMixin,
-    mixins.AuditMixin,
-    mixins.SlugMixin,
-    mixins.ActiveMixin,
-    mixins.ParentChildMixin,
-    mixins.ImageMixin,
-    stgs.SettingsMixin,
-    models.Model,
-):
+class Organization(mixins.HierarchicalEntity, stgs.SettingsMixin, models.Model):
     """Organization Model."""
 
     abbreviation = models.CharField(max_length=25, null=True, blank=True)
@@ -192,4 +181,3 @@ def create_organization_labels(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Organization)
 def save_organization_labels(sender, instance, **kwargs):
     instance.labels.save()
-
