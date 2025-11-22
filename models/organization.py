@@ -182,11 +182,10 @@ class OrganizationLabels(models.Model):
 
 
 @receiver(post_save, sender=Organization)
-def create_organization_labels(sender, instance, created, **kwargs):
-    if created:
-        OrganizationLabels.objects.create(organization=instance)
-
-
-@receiver(post_save, sender=Organization)
-def save_organization_labels(sender, instance, **kwargs):
-    instance.labels.save()
+def ensure_organization_labels(sender, instance, created, **kwargs):
+    labels = getattr(instance, "labels", None)
+    if not labels:
+        if not created:
+            return
+        labels = OrganizationLabels.objects.create(organization=instance)
+    labels.add_default_labels()

@@ -27,6 +27,15 @@ class OrganizationModelTests(BaseDomainTestCase):
     def test_root_lookup_traverses_parents(self):
         self.assertEqual(self.organization.get_root_organization(), self.parent_org)
 
+    def test_labels_are_created_with_defaults(self):
+        org = Organization.objects.create(
+            name="Timber Council",
+            abbreviation="TC",
+            max_depth=3,
+        )
+        self.assertTrue(hasattr(org, "labels"))
+        self.assertEqual(org.labels.attendee_label, "Attendee")
+
 
 class OrganizationFormTests(BaseDomainTestCase):
     def test_duplicate_name_in_same_parent_invalid(self):
