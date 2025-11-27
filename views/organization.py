@@ -21,6 +21,8 @@ from ..models.organization import Organization
 from ..forms.organization import OrganizationForm
 from ..serializers import OrganizationSerializer
 from ..tables.organization import OrganizationTable
+from core.api import BaseModelViewSet
+from core.permissions import IsAuthenticatedAndActive
 
 
 class ListView(LoginRequiredMixin, BaseTableListView):
@@ -171,6 +173,7 @@ class DeleteView(
     action = "Delete"
 
 
-class OrganizationViewSet(viewsets.ModelViewSet):
+class OrganizationViewSet(BaseModelViewSet):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
+    permission_classes = [IsAuthenticatedAndActive]
