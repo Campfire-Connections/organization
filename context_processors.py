@@ -1,10 +1,14 @@
 # organization/context_processors.py
 
+import logging
+
 import inflect
 
 from django.core.cache import cache
 
 from .models.organization import OrganizationLabels
+
+logger = logging.getLogger(__name__)
 
 
 def organization_labels(request):
@@ -13,7 +17,7 @@ def organization_labels(request):
     Includes handling for pluralization exceptions.
     """
     if not request.user.is_authenticated:
-        print("User not authenticated")
+        logger.debug("Organization labels skipped for anonymous user.")
         return {}
 
     cache_key = f"organization_labels_{request.user.id}"
@@ -64,7 +68,7 @@ def fetch_labels(request):
     }
 
     if not user_profile:
-        print("No profile found for user")
+        logger.debug("Using default organization labels; no profile found for user.")
         return default_labels
 
     # Plural exceptions
