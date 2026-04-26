@@ -2,6 +2,27 @@
 {% extends 'base/layout.html' %}
 {% load render_table from django_tables2 %}
 
+{% block title_text %}
+    {% if parent_org %}
+        Sub-Organizations of {{ parent_org.name }}
+    {% else %}
+        Organizations
+    {% endif %}
+{% endblock title_text %}
+
+{% block page_actions %}
+<a class="btn btn-primary" href="{% url 'organization_new' %}">
+    <span class="fas fa-plus-square"></span>
+    New Organization
+</a>
+{% if parent_org %}
+<a class="btn btn-outline-primary" href="{% url 'sub_organization_create' parent_org.slug %}">
+    <span class="fas fa-sitemap"></span>
+    New Sub-Organization
+</a>
+{% endif %}
+{% endblock page_actions %}
+
 {% block content %}
     {% if parent_org %}
     <h1>Sub-Organizations of {{ parent_org.name }}</h1>
