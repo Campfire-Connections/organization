@@ -1,13 +1,7 @@
-<!-- organization/templates/organization/form.html -->
+{% extends 'base/form.html' %}
 
-{% extends 'base/layout.html' %}
-
-{% block content %}
-    <h1>{{ action }} Organization</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">{{ action }} Organization</button>
-        <a href="{% url 'organization_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
-{% endblock content %}
+{% block form_title %}{{ action|default:'Save' }} Organization{% endblock form_title %}
+{% block form_heading %}{{ action|default:'Save' }} Organization{% endblock form_heading %}
+{% block submit_label %}{{ action|default:'Save' }} Organization{% endblock submit_label %}
+{% block cancel_url %}{% url 'organization_index' %}{% endblock cancel_url %}
+{% block cancel_url_bottom %}{% url 'organization_index' %}{% endblock cancel_url_bottom %}
