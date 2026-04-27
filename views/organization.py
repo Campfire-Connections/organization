@@ -1,8 +1,6 @@
 # organization/views/organization.py
 
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
 
 from core.views.base import (
     BaseTableListView,
@@ -21,6 +19,11 @@ from ..models.organization import Organization
 from ..forms.organization import OrganizationForm
 from ..serializers import OrganizationSerializer
 from ..tables.organization import OrganizationTable
+from ..selectors import (
+    get_organization_by_slug,
+    organization_queryset,
+    root_organizations_queryset,
+)
 from core.api import BaseModelViewSet
 from core.permissions import IsAuthenticatedAndActive
 
@@ -37,7 +40,7 @@ class ListView(LoginRequiredMixin, BaseTableListView):
     context_object_name = "organizations"
 
     def get_queryset(self):
-        return Organization.objects.all()
+        return organization_queryset()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,7 +60,7 @@ class RootListView(LoginRequiredMixin, BaseListView):
     context_object_name = "organizations"
 
     def get_queryset(self):
-        return Organization.objects.filter(parent__isnull=True)
+        return root_organizations_queryset()
 
 
 class DetailView(LoginRequiredMixin, BaseSlugOrPkObjectMixin, BaseDetailView):
@@ -118,7 +121,7 @@ class SubOrganizationCreateView(LoginRequiredMixin, BaseCreateView):
 
     def get_parent_organization(self):
         organization_slug = self.kwargs.get("organization_slug")
-        return get_object_or_404(Organization, slug=organization_slug)
+        return get_organization_by_slug(organization_slug)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -174,6 +177,6 @@ class DeleteView(
 
 
 class OrganizationViewSet(BaseModelViewSet):
-    queryset = Organization.objects.all()
+    queryset = organization_queryset()
     serializer_class = OrganizationSerializer
     permission_classes = [IsAuthenticatedAndActive]
