@@ -1,41 +1,36 @@
-{% extends 'base/layout.html' %}
+{% extends 'base/show.html' %}
 
-{% block title %}[SCSS] - {{ organization.name }}{% endblock title %}
+{% block title_text %}{{ organization.name }}{% endblock title_text %}
+{% block object_name %}{{ organization.name }}{% endblock object_name %}
+{% block object_identifier %}{{ organization.abbreviation }}{% endblock object_identifier %}
+{% block object_details %}
+    {% if organization.parent %}
+        Parent: {{ organization.parent.name }}
+    {% else %}
+        Root organization
+    {% endif %}
+{% endblock object_details %}
 
-{% block content %}
-    <div class="container">
-    <h1>{{ organization.name }}</h1>
-      <ul id="organization.name">
-        <li>
-          <span class="field-name">Name:</span>
-          <span class="field-value">{{ organization.name }}</span>
-        </li>
-        <li>
-          <span class="field-name">Abbreviation:</span>
-          <span class="field-value">{{ organization.abbreviation }}</span>
-        </li>
-        <li>
-          <span class="field-name">Description:</span>
-          <span class="field-value">{{ organization.description }}</span>
-        </li>
-        {% if organization.parent is defined and organization.parent %}
-        <li>
-          <span class="field-name">Parent:</span>
-          <span class="field-value">{{ organization.parent.name }}</span>
-        </li>
-        {% endif %}
-        <li>
-          <span class="field-name">Factions:</span>
-          <span class="field-value">{{ organization.factions.count }}</span>
-        </li>
-        <li>
-          <span class="field-name">Facilities:</span>
-          <span class="field-value">{{ organization.facilities.count }}</span>
-        </li>
-        <li>
-          <span class="field-name">Attendees:</span>
-          <span class="field-value">{{ organization.attendees.count }}</span>
-      </ul>
-    <a href="{% url 'organization_index' %}">Back to List</a>
-    </div>
-{% endblock content %}
+{% block card_body_overview %}
+<div class="card-body" id="overviewCard">
+    <h2 class="no-border card-title section-title">Organization Summary</h2>
+    <dl class="detail-list">
+        <dt>Name</dt>
+        <dd>{{ organization.name }}</dd>
+        <dt>Abbreviation</dt>
+        <dd>{{ organization.abbreviation|default:"-" }}</dd>
+        <dt>Description</dt>
+        <dd>{{ organization.description|default:"No description available." }}</dd>
+        <dt>Factions</dt>
+        <dd>{{ organization.factions.count }}</dd>
+        <dt>Facilities</dt>
+        <dd>{{ organization.facilities.count }}</dd>
+        <dt>Attendees</dt>
+        <dd>{{ organization.attendees.count }}</dd>
+    </dl>
+    <a class="btn btn-outline-secondary" href="{% url 'organization_index' %}">
+        <span class="fas fa-arrow-left" aria-hidden="true"></span>
+        Back to Organizations
+    </a>
+</div>
+{% endblock card_body_overview %}
